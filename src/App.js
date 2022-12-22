@@ -17,7 +17,7 @@ export default function App() {
     const allDice = dice.map((die, index) => 
         <Die 
             key={`Die ${index}`} 
-            value={dice[die]} 
+            value={die} 
         />
     )
 

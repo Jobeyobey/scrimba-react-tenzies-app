@@ -3,6 +3,17 @@ import Die from "./components/Die"
 
 export default function App() {
 
+    function allNewDice() {
+        const diceArray = []
+        for(let i = 0 ; i < 10 ; i++) {
+            const ranNum = Math.floor(Math.random() * 6 + 1)
+            diceArray.push(ranNum)
+        }
+        return diceArray
+    }
+
+    console.log(allNewDice())
+
     return (
         <main>
             <div className="dice-holder">
@@ -24,10 +35,8 @@ export default function App() {
 /**
  * Challenge:
  * 
- * - Create a Die component that takes a `value` prop
- * - Render 10 instances of the Die component (manually)
- *      - Provide a number between 1-6 for the value on each
- *        for now
- * - Style the <main> and <Die> components 
- *   to look like they do in the slide
+ * Write a function (allNewDice) that returns an array 
+ * of 10 random numbers between 1-6 inclusive.
+ * 
+ * Log the array of numbers to the console for now
  */

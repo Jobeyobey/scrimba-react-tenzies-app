@@ -10,6 +10,7 @@ body {
 
 main {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: auto;
@@ -17,14 +18,14 @@ main {
     height: 320px;
     width: 320px;
     border-radius: 10px;
-    padding: 15px;
+    padding: 30px;
 }
 
 .dice-holder {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    grid-gap: 15px;
+    grid-gap: 18px;
     width: 250px;
 }
 
@@ -43,9 +44,26 @@ main {
 }
 
 .die:hover {
-    background-color: #fafafa;
+    background-color: #f4f4f4;
 }
 
 .die-selected {
     background-color: #59E391;
+}
+
+.roll-button {
+    background-color: #5035FF;
+    font-family: Karla;
+    font-size: 16px;
+    color: white;
+    width: 92px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 25px;
+    cursor: pointer;
+}
+
+.roll-button:hover {
+    background-color: #4024ee;
 }

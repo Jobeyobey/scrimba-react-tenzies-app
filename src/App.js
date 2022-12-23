@@ -9,7 +9,8 @@ export default function App() {
         const diceArray = []
         for(let i = 0 ; i < 10 ; i++) {
             const ranNum = Math.floor(Math.random() * 6 + 1)
-            diceArray.push(ranNum)
+            const currentDie = { value: ranNum, isHeld: false }
+            diceArray.push(currentDie)
         }
         return diceArray
     }
@@ -21,7 +22,7 @@ export default function App() {
     const allDice = dice.map((die, index) => 
         <Die 
             key={`Die ${index}`} 
-            value={die} 
+            value={die.value} 
         />
     )
 
@@ -36,10 +37,10 @@ export default function App() {
 }
 
 /**
- * Challenge: Create a `Roll Dice` button that will re-roll
- * all 10 dice
+ * Challenge: Update the array of numbers in state to be
+ * an array of objects instead. Each object should look like:
+ * { value: <random number>, isHeld: false }
  * 
- * Clicking the button should generate a new array of numbers
- * and set the `dice` state to that new array (thus re-rendering
- * the array to the page)
+ * Making this change will break parts of our code, so make
+ * sure to update things so we're back to a working state
  */

@@ -6,6 +6,7 @@ export default function App() {
 
     const [dice, setDice] = React.useState(allNewDice())
 
+    // Create an array of dice objects with an id, value and isHeld property
     function allNewDice() {
         const diceArray = []
         for(let i = 0 ; i < 10 ; i++) {
@@ -13,23 +14,24 @@ export default function App() {
             const currentDie = { 
                 id: nanoid(), 
                 value: ranNum, 
-                isHeld: false 
+                isHeld: false
             }
             diceArray.push(currentDie)
         }
         return diceArray
     }
 
-    console.log(dice);
-
+    // Function to 'roll' the dice and update state when 'roll' button is clicked
     function rollDice() {
         setDice(allNewDice)
     }
 
+    // Map over dice array to create the dice components
     const allDice = dice.map((die, index) => 
         <Die 
             key={die.id} 
             value={die.value} 
+            isHeld = {die.isHeld}
         />
     )
 
@@ -42,12 +44,3 @@ export default function App() {
         </main>
     )
 }
-
-/**
- * Challenge: Update the array of numbers in state to be
- * an array of objects instead. Each object should look like:
- * { value: <random number>, isHeld: false }
- * 
- * Making this change will break parts of our code, so make
- * sure to update things so we're back to a working state
- */

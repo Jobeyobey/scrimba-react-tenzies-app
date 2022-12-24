@@ -8,6 +8,7 @@ body {
     padding: 25px;
 }
 
+/* Main container */
 main {
     display: flex;
     flex-direction: column;
@@ -21,6 +22,7 @@ main {
     padding: 30px;
 }
 
+/* Div to hold all dice in a grid */
 .dice-holder {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -29,6 +31,7 @@ main {
     width: 250px;
 }
 
+/* Dice styling */
 .die {
     display: flex;
     justify-content: center;
@@ -47,9 +50,15 @@ main {
     background-color: #f4f4f4;
 }
 
-.die-selected {
+.selected {
     background-color: #59E391;
 }
+
+.selected:hover {
+    background-color: #48d280;
+}
+
+/* Roll button styling */
 
 .roll-button {
     background-color: #5035FF;

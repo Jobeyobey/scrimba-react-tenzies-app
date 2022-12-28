@@ -5,7 +5,18 @@ import { nanoid } from "nanoid"
 export default function App() {
 
     const [dice, setDice] = React.useState(allNewDice())
-
+    const [tenzies, setTenzies] = React.useState(false)
+    
+    // Check for a win whenever "dice" state updates
+    React.useEffect(() => {
+        if(dice.every(die => die.isHeld)) {
+            if(dice.every(die => die.value === dice[0].value)) {
+                console.log("You Won!")
+                setTenzies(true)
+            }
+        }
+    }, [dice])
+    
     // Create an array of dice objects with an id, value and isHeld property
     function allNewDice() {
         const diceArray = []
@@ -64,9 +75,3 @@ export default function App() {
         </main>
     )
 }
-
-/**
- * Challenge: Update the `rollDice` function to not just roll
- * all new dice, but instead to look through the existing dice
- * to NOT role any that are being `held`.
- */

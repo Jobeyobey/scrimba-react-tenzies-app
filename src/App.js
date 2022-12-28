@@ -21,17 +21,34 @@ export default function App() {
         return diceArray
     }
 
-    // Function to 'roll' the dice and update state when 'roll' button is clicked
+    // 'roll' dice and update state with new dice. Keep 'isHeld' dice
     function rollDice() {
-        setDice(allNewDice)
+        const newDice = allNewDice();
+        setDice(oldDice => oldDice.map((die, index) => {
+            return die.isHeld ? 
+            die : 
+            newDice[index]
+        }))
+    }
+
+    // Flip 'isHeld' value when a dice is clicked, using the id property
+    function holdDice(id) {
+        setDice(oldDice => oldDice.map(die => {
+            return die.id === id ? 
+            {...die, isHeld: !die.isHeld} :
+            die
+            }
+        ))
     }
 
     // Map over dice array to create the dice components
     const allDice = dice.map((die, index) => 
         <Die 
-            key={die.id} 
-            value={die.value} 
+            key = {die.id}
+            id = {die.id}
+            value = {die.value} 
             isHeld = {die.isHeld}
+            holdDice = {holdDice}
         />
     )
 
@@ -44,3 +61,9 @@ export default function App() {
         </main>
     )
 }
+
+/**
+ * Challenge: Update the `rollDice` function to not just roll
+ * all new dice, but instead to look through the existing dice
+ * to NOT role any that are being `held`.
+ */

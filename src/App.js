@@ -1,6 +1,7 @@
 import React from "react"
 import Die from "./components/Die"
 import { nanoid } from "nanoid"
+import Confetti from "react-confetti"
 
 export default function App() {
 
@@ -11,7 +12,6 @@ export default function App() {
     React.useEffect(() => {
         if(dice.every(die => die.isHeld)) {
             if(dice.every(die => die.value === dice[0].value)) {
-                console.log("You Won!")
                 setTenzies(true)
             }
         }
@@ -32,14 +32,19 @@ export default function App() {
         return diceArray
     }
 
-    // 'roll' dice and update state with new dice. Keep 'isHeld' dice
+    // 'roll' dice and update state with new dice. Keep 'isHeld' dice. If game is won, reset game
     function rollDice() {
-        const newDice = allNewDice();
-        setDice(oldDice => oldDice.map((die, index) => {
-            return die.isHeld ? 
-            die : 
-            newDice[index]
-        }))
+        if (tenzies) {
+            setDice(allNewDice)
+            setTenzies(false)
+        } else {
+            const newDice = allNewDice();
+            setDice(oldDice => oldDice.map((die, index) => {
+                return die.isHeld ? 
+                die : 
+                newDice[index]
+            }))
+        }
     }
 
     // Flip 'isHeld' value when a dice is clicked, using the id property
@@ -65,13 +70,19 @@ export default function App() {
 
     return (
         <main>
+            {tenzies && <Confetti />}
             <h1 className="title">Tenzies</h1>
             <p className="description">Roll until all dice are the same. Click each die to
                 freeze it at its current value between rolls.</p>
             <div className="dice-holder">
                 {allDice}
             </div>
-            <button className="roll-button" onClick={rollDice}>Roll Dice</button>
+            <button 
+                className="roll-button" 
+                onClick={rollDice}
+            >
+                {tenzies ? "New Game" : "Roll Dice"}
+            </button>
         </main>
     )
 }

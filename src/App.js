@@ -89,18 +89,12 @@ export default function App() {
 
 /** 
  * Extra Credit Ideas:
- * Real dots on dice (CSS)
+ * Real dots on dice (CSS) DONE
  * Track number of rolls
  * Track time taken to win
  * Track high scores (locally)
  * Add/Remove dice
  * Set timer with possibility to lose
-*/
-
-/**
- * Roll dots on Dice
- *  Each dice face would need a class face with a grid positioning the dots in the correct places
- *  The class would need to be picked depending on the value passed to the die
 */
 
 /**

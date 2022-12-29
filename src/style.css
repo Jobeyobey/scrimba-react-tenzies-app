@@ -42,22 +42,61 @@ main {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    grid-gap: 18px;
+    grid-gap: 12px;
     width: 250px;
 }
 
 /* Dice styling */
 .die {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #ffffff;
     width: 100%;
     aspect-ratio: 1 / 1;
     border-radius: 3px;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    font-size: 21px;
+}
+
+.die-grid {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template:
+                "a . c"
+                "d e f"
+                "g . i";
+    align-items: center;
+    justify-items: center;
+    font-size: 10px;
+}
+
+/* Locations to place die dots */
+
+.a {
+    grid-area: a;
+}
+
+.c {
+    grid-area: c;
+}
+
+.d {
+    grid-area: d;
+}
+
+.e {
+    grid-area: e;
+}
+
+.f {
+    grid-area: f;
+}
+
+.g {
+    grid-area: g;
+}
+
+.i {
+    grid-area: i;
 }
 
 .die:hover {

@@ -2,11 +2,13 @@ import React from "react"
 import Die from "./components/Die"
 import { nanoid } from "nanoid"
 import Confetti from "react-confetti"
+import Scores from "./components/Scores"
 
 export default function App() {
 
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
+    const [scores, setScores] = React.useState({time: 0, rolls: 0})
     
     // Check for a win whenever "dice" state updates
     React.useEffect(() => {
@@ -37,6 +39,7 @@ export default function App() {
         if (tenzies) {
             setDice(allNewDice)
             setTenzies(false)
+            setScores({time: 0, rolls: 0})
         } else {
             const newDice = allNewDice();
             setDice(oldDice => oldDice.map((die, index) => {
@@ -44,6 +47,12 @@ export default function App() {
                 die : 
                 newDice[index]
             }))
+            setScores(oldScores => {
+                return {
+                    ...oldScores,
+                    rolls: oldScores.rolls + 1
+                }
+            })
         }
     }
 
@@ -70,19 +79,22 @@ export default function App() {
 
     return (
         <main>
-            {tenzies && <Confetti />}
-            <h1 className="title">Tenzies</h1>
-            <p className="description">Roll until all dice are the same. Click each die to
-                freeze it at its current value between rolls.</p>
-            <div className="dice-holder">
-                {allDice}
+            <div className="main-container">
+                {tenzies && <Confetti />}
+                <h1 className="title">Tenzies</h1>
+                <p className="description">Roll until all dice are the same. Click each die to
+                    freeze it at its current value between rolls.</p>
+                <div className="dice-holder">
+                    {allDice}
+                </div>
+                <button 
+                    className="roll-button" 
+                    onClick={rollDice}
+                >
+                    {tenzies ? "New Game" : "Roll Dice"}
+                </button>
             </div>
-            <button 
-                className="roll-button" 
-                onClick={rollDice}
-            >
-                {tenzies ? "New Game" : "Roll Dice"}
-            </button>
+            <Scores scores={scores}/>
         </main>
     )
 }
@@ -90,18 +102,12 @@ export default function App() {
 /** 
  * Extra Credit Ideas:
  * Real dots on dice (CSS) DONE
- * Track number of rolls
+ * Track number of rolls DONE
  * Track time taken to win
  * Track high scores (locally)
  * Add/Remove dice
  * Set timer with possibility to lose
 */
-
-/**
- * Track number of rolls
- *  Initialise new state to track rolls
- *  Add setState to add 1 each time the Roll button is clicked
- */
 
 /**
  * Track time taken to win

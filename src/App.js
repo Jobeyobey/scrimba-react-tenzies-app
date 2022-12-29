@@ -86,3 +86,55 @@ export default function App() {
         </main>
     )
 }
+
+/** 
+ * Extra Credit Ideas:
+ * Real dots on dice (CSS)
+ * Track number of rolls
+ * Track time taken to win
+ * Track high scores (locally)
+ * Add/Remove dice
+ * Set timer with possibility to lose
+*/
+
+/**
+ * Roll dots on Dice
+ *  Each dice face would need a class face with a grid positioning the dots in the correct places
+ *  The class would need to be picked depending on the value passed to the die
+*/
+
+/**
+ * Track number of rolls
+ *  Initialise new state to track rolls
+ *  Add setState to add 1 each time the Roll button is clicked
+ */
+
+/**
+ * Track time taken to win
+ *  Find a way to track time starting from game start
+ *      Create a state in which the game has not started
+ *  Create a way to start the game, starting the timer
+ *  Stop the timer when the game is won
+ *  Reset timer when new game is started
+ */
+
+/**
+ * Track high scores
+ *  Initialise a highScore state as object with scores wanting tracking
+ *  Whenever a high score is achieved, update state and save it to local storage
+ *  Whenever state is initilaised, check localStorage for high score
+ */
+
+/**
+ * Add or remove dice
+ *  Add a + / - button to increment/decrement dice to a min/max of 5/20
+ *  Increase grid spaces to accomodate more dice
+ *  This would cause an issue with score tracking, I'd need different high score sets for different numbers of dice... Possibly too complicated for right now
+ */
+
+/**
+ * Timer with possibility to lose
+ *  Before game is started, making it possible to set a countdown timer
+ *  If countdown timer reaches 0, the game is lost
+ *      This can contribute to a win/loss tracker if I wanted
+ */

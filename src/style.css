@@ -9,7 +9,7 @@ body {
 }
 
 /* Main container */
-main {
+.main-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -128,4 +128,33 @@ main {
 
 .roll-button:hover {
     background-color: #4024ee;
+}
+
+/* Scores styling */
+
+.score-container {
+    margin: auto;
+    background-color: #F5F5F5;
+    height: auto;
+    width: 320px;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 15px 50px;
+    text-align: center;
+    font-family: "Karla", sans-serif;
+}
+
+.score-title {
+    margin: 0px;
+}
+
+.scores {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0px;
+}
+
+.timer, .rolls, .wins, .losses {
+    margin: 10px 0px 0px 0px;
 }

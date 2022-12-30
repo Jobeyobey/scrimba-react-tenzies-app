@@ -8,16 +8,40 @@ export default function App() {
 
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
-    const [scores, setScores] = React.useState({time: 0, rolls: 0})
+    const [rolls, setRolls] = React.useState(0)
+    const [time, setTime] = React.useState(0)
+    const [highScore, setHighScore] = React.useState({fastestTime: 0, leastRolls: 0})
     
     // Check for a win whenever "dice" state updates
     React.useEffect(() => {
         if(dice.every(die => die.isHeld)) {
             if(dice.every(die => die.value === dice[0].value)) {
                 setTenzies(true)
+                setHighScore(prevHighScore => {
+                    let score = {...prevHighScore}
+                    if(score.fastestTime > time || score.fastestTime === 0) {
+                        score.fastestTime = time
+                    }
+                    if(score.leastRolls > rolls || score.leastRolls === 0) {
+                        score.leastRolls = rolls
+                    }
+                    return score
+                })
             }
         }
     }, [dice])
+
+    // Start timer on load
+    React.useEffect(() => {
+        console.log("Effect ran")
+        if(!tenzies) {
+            const interval = setInterval(() => {
+                setTime((time) => time + 1)
+            }, 10)
+            console.log("If ran")
+            return () => clearInterval(interval)
+        }
+    }, [tenzies])
     
     // Create an array of dice objects with an id, value and isHeld property
     function allNewDice() {
@@ -39,7 +63,8 @@ export default function App() {
         if (tenzies) {
             setDice(allNewDice)
             setTenzies(false)
-            setScores({time: 0, rolls: 0})
+            setRolls(0)
+            setTime(0)
         } else {
             const newDice = allNewDice();
             setDice(oldDice => oldDice.map((die, index) => {
@@ -47,12 +72,7 @@ export default function App() {
                 die : 
                 newDice[index]
             }))
-            setScores(oldScores => {
-                return {
-                    ...oldScores,
-                    rolls: oldScores.rolls + 1
-                }
-            })
+            setRolls(prevRolls => prevRolls + 1)
         }
     }
 
@@ -94,7 +114,7 @@ export default function App() {
                     {tenzies ? "New Game" : "Roll Dice"}
                 </button>
             </div>
-            <Scores scores={scores}/>
+            <Scores rolls={rolls} time={time} highScore={highScore}/>
         </main>
     )
 }
@@ -116,6 +136,7 @@ export default function App() {
  *  Create a way to start the game, starting the timer
  *  Stop the timer when the game is won
  *  Reset timer when new game is started
+ * **SHOULD BE IN ITS OWN COMPONENT? KEEPS RE-RENDERING TOO OFTEN**
  */
 
 /**

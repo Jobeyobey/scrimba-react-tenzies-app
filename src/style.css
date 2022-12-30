@@ -155,6 +155,6 @@ body {
     margin: 0px;
 }
 
-.timer, .rolls {
+.timer, .rolls, .wins, .losses {
     margin: 10px 0px 0px 0px;
 }

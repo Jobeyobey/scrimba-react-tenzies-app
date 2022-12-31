@@ -27,6 +27,7 @@ export default function App() {
                 setTenzies(true)
                 clearInterval(intervalRef.current)
                 intervalRef.current = null
+                setInProgress(!inProgress)
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
                     if(score.fastestTime > time || score.fastestTime === 0) {
@@ -48,12 +49,12 @@ export default function App() {
 
     // Start timer on load. Reference for interval timer set as `intervalRef.current`.
     React.useEffect(() => {
-        if(!tenzies && intervalRef.current === null) {
+        if(!tenzies && intervalRef.current === null && inProgress) {
             intervalRef.current = setInterval(() => {
                 setTime((time) => time + 1)
             }, 10)
         }
-    }, [tenzies])
+    }, [inProgress])
 
     React.useEffect(() => {
         setDice(allNewDice)
@@ -92,6 +93,9 @@ export default function App() {
 
     // 'roll' dice and update state with new dice. Keep 'isHeld' dice. If game is won, reset game
     function rollDice() {
+        if (!inProgress) {
+            setInProgress(!inProgress)
+        }
         if (tenzies) {
             setDice(allNewDice)
             setTenzies(false)
@@ -143,7 +147,7 @@ export default function App() {
                     className="roll-button" 
                     onClick={rollDice}
                 >
-                    {tenzies ? "New Game" : "Roll Dice"}
+                    {inProgress ? "Roll Dice" : "Start New Game"}
                 </button>
             </div>
             <Scores rolls={rolls} time={time} highScore={highScore}/>

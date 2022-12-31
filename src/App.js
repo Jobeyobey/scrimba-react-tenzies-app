@@ -7,6 +7,7 @@ import Confetti from "react-confetti"
 
 export default function App() {
 
+    const [numDice, setNumDice] = React.useState(10)
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
     const [rolls, setRolls] = React.useState(0)
@@ -53,11 +54,31 @@ export default function App() {
             }, 10)
         }
     }, [tenzies])
-    
+
+    React.useEffect(() => {
+        setDice(allNewDice)
+    }, [numDice])
+
+    function incrementNumDice() {
+        setNumDice(prevNumDice => {
+            return prevNumDice < 20
+            ? prevNumDice + 1
+            : prevNumDice
+        })
+    }
+
+    function decrementNumDice() {
+        setNumDice(prevNumDice => {
+            return prevNumDice > 5
+            ? prevNumDice - 1
+            : prevNumDice
+        })
+    }
+
     // Create an array of dice objects with an id, value and isHeld property
     function allNewDice() {
         const diceArray = []
-        for(let i = 0 ; i < 10 ; i++) {
+        for(let i = 0 ; i < numDice ; i++) {
             const ranNum = Math.floor(Math.random() * 6 + 1)
             const currentDie = { 
                 id: nanoid(), 
@@ -126,7 +147,11 @@ export default function App() {
                 </button>
             </div>
             <Scores rolls={rolls} time={time} highScore={highScore}/>
-            { !inProgress && <Settings />}
+            { !inProgress&& <Settings
+                    incrementNumDice={incrementNumDice}
+                    decrementNumDice={decrementNumDice}
+                />
+            }
         </main>
     )
 }
@@ -138,23 +163,10 @@ export default function App() {
  * Track time taken to win DONE
  * Track high scores (locally) DONE
  * When game is stopped, have settings appear DONE
- * Add/Remove dice
+ * Add/Remove dice DONE
  * Set timer with possibility to lose
+ * Update/Display high scores corresponding with numDice
 */
-
-/**
- * Settings
- *  Create a state for whether game is in progress
- *  When game is not in progress, render a settings window
- *  Settings window should have a number of dice setting, and timer setting
- */
-
-/**
- * Add or remove dice
- *  Add a + / - button to increment/decrement dice to a min/max of 5/20
- *  Increase grid spaces to accomodate more dice
- *  This would cause an issue with score tracking, I'd need different high score sets for different numbers of dice... Possibly too complicated for right now
- */
 
 /**
  * Timer with possibility to lose

@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function settings() {
+export default function settings(props) {
 
     return (
         <div className="settings-container">
@@ -16,8 +16,8 @@ export default function settings() {
                 <div className="settings-setting">
                     <h4>Dice Number:</h4>
                     <div>
-                        <button className="settings-button-red">-</button>
-                        <button className="settings-button-green">+</button>
+                        <button className="settings-button-red" onClick={props.decrementNumDice}>-</button>
+                        <button className="settings-button-green" onClick={props.incrementNumDice}>+</button>
                     </div>
                 </div>
             </div>

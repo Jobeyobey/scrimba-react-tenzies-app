@@ -195,6 +195,10 @@ body {
     margin: 10px 0px 0px 0px;
 }
 
+.settings-challenge-timer {
+    margin: 5px 0px;
+}
+
 /* Settings buttons*/
 
 .settings-button-red {

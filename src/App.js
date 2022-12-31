@@ -10,10 +10,14 @@ export default function App() {
     const [tenzies, setTenzies] = React.useState(false)
     const [rolls, setRolls] = React.useState(0)
     const [time, setTime] = React.useState(0)
-    const [highScore, setHighScore] = React.useState({fastestTime: 0, leastRolls: 0})
+    const [highScore, setHighScore] = React.useState(
+            localStorage.getItem('fastestTime' && 'leastRolls') 
+            ? {fastestTime: parseInt(localStorage.getItem('fastestTime')), leastRolls: parseInt(localStorage.getItem('leastRolls'))}
+            : {fastestTime: 0, leastRolls: 0}
+        )
     const intervalRef = React.useRef(null)
     
-    // Check for a win whenever "dice" state updates
+    // Check for a win whenever "dice" state updates. Stop timer on win. Set high scores on win.
     React.useEffect(() => {
         if(dice.every(die => die.isHeld)) {
             if(dice.every(die => die.value === dice[0].value)) {
@@ -33,9 +37,15 @@ export default function App() {
         }
     }, [dice])
 
-    // Start timer on load
+    // Save highScore to localStorage on win
     React.useEffect(() => {
-        console.log("Ran")
+        localStorage.setItem('fastestTime', highScore.fastestTime.toString())
+        localStorage.setItem('leastRolls', highScore.leastRolls.toString())
+    }, [highScore])
+
+    // Start timer on load. Reference for interval timer set as `intervalRef.current`.
+    React.useEffect(() => {
+        console.log(highScore)
         if(!tenzies) {
             intervalRef.current = setInterval(() => {
                 setTime((time) => time + 1)
@@ -123,28 +133,11 @@ export default function App() {
  * Extra Credit Ideas:
  * Real dots on dice (CSS) DONE
  * Track number of rolls DONE
- * Track time taken to win
- * Track high scores (locally)
+ * Track time taken to win DONE
+ * Track high scores (locally) DONE
  * Add/Remove dice
  * Set timer with possibility to lose
 */
-
-/**
- * Track time taken to win
- *  Find a way to track time starting from game start
- *      Create a state in which the game has not started
- *  Create a way to start the game, starting the timer
- *  Stop the timer when the game is won
- *  Reset timer when new game is started
- * **SHOULD BE IN ITS OWN COMPONENT? KEEPS RE-RENDERING TOO OFTEN**
- */
-
-/**
- * Track high scores
- *  Initialise a highScore state as object with scores wanting tracking
- *  Whenever a high score is achieved, update state and save it to local storage
- *  Whenever state is initilaised, check localStorage for high score
- */
 
 /**
  * Add or remove dice

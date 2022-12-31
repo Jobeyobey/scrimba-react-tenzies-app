@@ -13,8 +13,8 @@ export default function App() {
     const [rolls, setRolls] = React.useState(0)
     const [time, setTime] = React.useState(0)
     const [highScore, setHighScore] = React.useState(
-            localStorage.getItem('fastestTime' && 'leastRolls') 
-            ? {fastestTime: parseInt(localStorage.getItem('fastestTime')), leastRolls: parseInt(localStorage.getItem('leastRolls'))}
+            localStorage.getItem('highScore') 
+            ? JSON.parse(localStorage.getItem('highScore'))
             : {fastestTime: 0, leastRolls: 0}
         )
     const [inProgress, setInProgress] = React.useState(false)
@@ -26,6 +26,7 @@ export default function App() {
             if(dice.every(die => die.value === dice[0].value)) {
                 setTenzies(true)
                 clearInterval(intervalRef.current)
+                intervalRef.current = null
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
                     if(score.fastestTime > time || score.fastestTime === 0) {
@@ -42,8 +43,7 @@ export default function App() {
 
     // Save highScore to localStorage on win
     React.useEffect(() => {
-        localStorage.setItem('fastestTime', highScore.fastestTime.toString())
-        localStorage.setItem('leastRolls', highScore.leastRolls.toString())
+        localStorage.setItem('highScore', JSON.stringify(highScore))
     }, [highScore])
 
     // Start timer on load. Reference for interval timer set as `intervalRef.current`.

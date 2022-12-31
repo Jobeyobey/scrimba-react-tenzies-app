@@ -11,12 +11,14 @@ export default function App() {
     const [rolls, setRolls] = React.useState(0)
     const [time, setTime] = React.useState(0)
     const [highScore, setHighScore] = React.useState({fastestTime: 0, leastRolls: 0})
+    const intervalRef = React.useRef(null)
     
     // Check for a win whenever "dice" state updates
     React.useEffect(() => {
         if(dice.every(die => die.isHeld)) {
             if(dice.every(die => die.value === dice[0].value)) {
                 setTenzies(true)
+                clearInterval(intervalRef.current)
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
                     if(score.fastestTime > time || score.fastestTime === 0) {
@@ -33,13 +35,11 @@ export default function App() {
 
     // Start timer on load
     React.useEffect(() => {
-        console.log("Effect ran")
+        console.log("Ran")
         if(!tenzies) {
-            const interval = setInterval(() => {
+            intervalRef.current = setInterval(() => {
                 setTime((time) => time + 1)
             }, 10)
-            console.log("If ran")
-            return () => clearInterval(interval)
         }
     }, [tenzies])
     

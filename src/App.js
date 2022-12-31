@@ -8,6 +8,7 @@ import Confetti from "react-confetti"
 export default function App() {
 
     const [numDice, setNumDice] = React.useState(10)
+    const [timeChallenge, setTimeChallenge] = React.useState({challenge: false, timer: 0})
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
     const [rolls, setRolls] = React.useState(0)
@@ -27,6 +28,7 @@ export default function App() {
                 setTenzies(true)
                 clearInterval(intervalRef.current)
                 intervalRef.current = null
+                setInProgress(!inProgress)
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
                     if(score.fastestTime > time || score.fastestTime === 0) {
@@ -48,17 +50,18 @@ export default function App() {
 
     // Start timer on load. Reference for interval timer set as `intervalRef.current`.
     React.useEffect(() => {
-        if(!tenzies && intervalRef.current === null) {
+        if(!tenzies && intervalRef.current === null && inProgress) {
             intervalRef.current = setInterval(() => {
                 setTime((time) => time + 1)
             }, 10)
         }
-    }, [tenzies])
+    }, [inProgress])
 
     React.useEffect(() => {
         setDice(allNewDice)
     }, [numDice])
 
+    // Increment number of dice in game in settings Component (max 20)
     function incrementNumDice() {
         setNumDice(prevNumDice => {
             return prevNumDice < 20
@@ -67,12 +70,32 @@ export default function App() {
         })
     }
 
+    // Decrement number of dice in game in settings Component (min 5)
     function decrementNumDice() {
         setNumDice(prevNumDice => {
             return prevNumDice > 5
             ? prevNumDice - 1
             : prevNumDice
         })
+    }
+    
+    // Flip time challenge true/false in settings Component
+    function toggleChallenge(value) {
+        if(value === "on") {
+            setTimeChallenge(prevTimeChallenge => {
+                return {
+                    ...prevTimeChallenge,
+                    challenge: true
+                }
+            })
+        } else if (value === "off") {
+            setTimeChallenge(prevTimeChallenge => {
+                return {
+                    ...prevTimeChallenge,
+                    challenge: false
+                }
+            })
+        }
     }
 
     // Create an array of dice objects with an id, value and isHeld property
@@ -92,6 +115,9 @@ export default function App() {
 
     // 'roll' dice and update state with new dice. Keep 'isHeld' dice. If game is won, reset game
     function rollDice() {
+        if (!inProgress) {
+            setInProgress(!inProgress)
+        }
         if (tenzies) {
             setDice(allNewDice)
             setTenzies(false)
@@ -136,20 +162,26 @@ export default function App() {
                 <h1 className="title">Tenzies</h1>
                 <p className="description">Roll until all dice are the same. Click each die to
                     freeze it at its current value between rolls.</p>
+                {inProgress &&
                 <div className="dice-holder">
                     {allDice}
                 </div>
+                }
+                
                 <button 
                     className="roll-button" 
                     onClick={rollDice}
                 >
-                    {tenzies ? "New Game" : "Roll Dice"}
+                    {inProgress ? "Roll Dice" : "Start New Game"}
                 </button>
             </div>
             <Scores rolls={rolls} time={time} highScore={highScore}/>
             { !inProgress&& <Settings
                     incrementNumDice={incrementNumDice}
                     decrementNumDice={decrementNumDice}
+                    numDice={numDice}
+                    timeChallenge={timeChallenge}
+                    toggleChallenge={toggleChallenge}
                 />
             }
         </main>
@@ -165,6 +197,7 @@ export default function App() {
  * When game is stopped, have settings appear DONE
  * Add/Remove dice DONE
  * Set timer with possibility to lose
+ * Clear high scores button
  * Update/Display high scores corresponding with numDice
 */
 

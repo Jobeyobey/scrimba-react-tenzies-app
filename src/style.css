@@ -139,7 +139,7 @@ body {
     width: 320px;
     border-radius: 10px;
     margin-top: 20px;
-    padding: 15px 50px;
+    padding: 15px 40px;
     text-align: center;
     font-family: "Karla", sans-serif;
 }
@@ -157,4 +157,83 @@ body {
 
 .timer, .rolls, .wins, .losses {
     margin: 10px 0px 0px 0px;
+}
+
+/* Settings */
+
+.settings-container {
+    margin: auto;
+    background-color: #F5F5F5;
+    height: auto;
+    width: 320px;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 15px 40px;
+    font-family: "Karla", sans-serif;
+}
+
+.settings-title {
+    margin: 0px;
+    text-align: center;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 0px;
+}
+
+.settings-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0px;
+}
+
+.settings-setting h4 {
+    margin: 10px 0px 0px 0px;
+}
+
+/* Settings buttons*/
+
+.settings-button-red {
+    width: 40px;
+    background-color: #F13535;
+    color: white;
+    border: none;
+    border-radius: 3px 0px 0px 3px;
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.settings-button-green {
+    width: 40px;
+    background-color: #0AC24E;
+    color: white;
+    border: none;
+    border-radius: 0px 3px 3px 0px;
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.settings-button-red:hover {
+    background-color: #E52424;
+}
+
+.settings-button-green:hover {
+    background-color: #0BBE3D;
+}
+
+.unselected {
+    background-color: #D9D9D9;
+    color: #686868;
+}
+
+.unselected:hover {
+    background-color: #C4C4C4;
 }

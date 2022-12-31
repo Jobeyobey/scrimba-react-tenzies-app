@@ -1,8 +1,9 @@
 import React from "react"
 import Die from "./components/Die"
+import Scores from "./components/Scores"
+import Settings from "./components/Settings"
 import { nanoid } from "nanoid"
 import Confetti from "react-confetti"
-import Scores from "./components/Scores"
 
 export default function App() {
 
@@ -15,6 +16,7 @@ export default function App() {
             ? {fastestTime: parseInt(localStorage.getItem('fastestTime')), leastRolls: parseInt(localStorage.getItem('leastRolls'))}
             : {fastestTime: 0, leastRolls: 0}
         )
+    const [inProgress, setInProgress] = React.useState(false)
     const intervalRef = React.useRef(null)
     
     // Check for a win whenever "dice" state updates. Stop timer on win. Set high scores on win.
@@ -45,8 +47,7 @@ export default function App() {
 
     // Start timer on load. Reference for interval timer set as `intervalRef.current`.
     React.useEffect(() => {
-        console.log(highScore)
-        if(!tenzies) {
+        if(!tenzies && intervalRef.current === null) {
             intervalRef.current = setInterval(() => {
                 setTime((time) => time + 1)
             }, 10)
@@ -125,6 +126,7 @@ export default function App() {
                 </button>
             </div>
             <Scores rolls={rolls} time={time} highScore={highScore}/>
+            { !inProgress && <Settings />}
         </main>
     )
 }
@@ -135,9 +137,17 @@ export default function App() {
  * Track number of rolls DONE
  * Track time taken to win DONE
  * Track high scores (locally) DONE
+ * When game is stopped, have settings appear DONE
  * Add/Remove dice
  * Set timer with possibility to lose
 */
+
+/**
+ * Settings
+ *  Create a state for whether game is in progress
+ *  When game is not in progress, render a settings window
+ *  Settings window should have a number of dice setting, and timer setting
+ */
 
 /**
  * Add or remove dice

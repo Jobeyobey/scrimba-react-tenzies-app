@@ -4,6 +4,14 @@ export default function settings(props) {
 
     const challengeOn = props.timeChallenge.challenge
 
+    let cs = props.timeChallenge.timer % 100
+    let sec = Math.floor(props.timeChallenge.timer / 100) % 60
+    let min = Math.floor((props.timeChallenge.timer / 100) / 60)
+
+    let csDisplay = cs < 10 ? `0${cs}` : cs
+    let secDisplay = sec < 10 ? `0${sec}` : sec
+    let minDisplay = min < 10 ? `0${min}` : min
+
     return (
         <div className="settings-container">
             <h2 className="settings-title">Game Settings</h2>
@@ -27,10 +35,20 @@ export default function settings(props) {
                 </div>
                 {props.timeChallenge.challenge &&
                     <div className="settings-setting">
-                    <h4 className="settings-challenge-timer">Timer: 0</h4>
+                    <h4 className="settings-challenge-timer">Timer: {minDisplay}:{secDisplay}:{csDisplay}</h4>
                         <div>
-                            <button className="settings-button-red">-</button>
-                            <button className="settings-button-green">+</button>
+                            <button
+                                className="settings-button-red"
+                                onClick={() => props.decrementChallengeTimer()}
+                                >
+                                    -
+                                </button>
+                            <button
+                                className="settings-button-green"
+                                onClick={() => props.incrementChallengeTimer()}
+                            >
+                                +
+                            </button>
                         </div>
                 </div>
                 }

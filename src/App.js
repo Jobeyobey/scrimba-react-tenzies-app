@@ -8,7 +8,7 @@ import Confetti from "react-confetti"
 export default function App() {
 
     const [numDice, setNumDice] = React.useState(10)
-    const [timeChallenge, setTimeChallenge] = React.useState({challenge: false, timer: 0})
+    const [timeChallenge, setTimeChallenge] = React.useState({challenge: false, timer: 2000})
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
     const [rolls, setRolls] = React.useState(0)
@@ -98,6 +98,34 @@ export default function App() {
         }
     }
 
+    // Increment time challenge timer
+    function incrementChallengeTimer() {
+        setTimeChallenge(prevTimeChallenge => {
+            if(timeChallenge.timer >= 6000) {
+                return prevTimeChallenge
+            } else {
+                return {
+                    ...prevTimeChallenge,
+                    timer: prevTimeChallenge.timer + 500
+                }
+            }
+        })
+    }
+
+    // Decrement time challenge timer
+    function decrementChallengeTimer() {
+        setTimeChallenge(prevTimeChallenge => {
+            if(timeChallenge.timer <= 500) {
+                return prevTimeChallenge
+            } else {
+                return {
+                    ...prevTimeChallenge,
+                    timer: prevTimeChallenge.timer - 500
+                }
+            }
+        })
+    }
+
     // Create an array of dice objects with an id, value and isHeld property
     function allNewDice() {
         const diceArray = []
@@ -182,6 +210,8 @@ export default function App() {
                     numDice={numDice}
                     timeChallenge={timeChallenge}
                     toggleChallenge={toggleChallenge}
+                    incrementChallengeTimer={incrementChallengeTimer}
+                    decrementChallengeTimer={decrementChallengeTimer}
                 />
             }
         </main>
@@ -206,4 +236,5 @@ export default function App() {
  *  Before game is started, making it possible to set a countdown timer
  *  If countdown timer reaches 0, the game is lost
  *      This can contribute to a win/loss tracker if I wanted
+ * **** Use timer to take away current time from time challenge time. When time challenge time hits 0, game over
  */

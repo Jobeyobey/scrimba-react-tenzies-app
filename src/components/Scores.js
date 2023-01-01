@@ -3,12 +3,12 @@ import React from "react"
 export default function Scores(props) {
 
     // Get milliseconds, seconds and minutes from props.time
-    let ms = props.time % 100
+    let cs = props.time % 100
     let sec = Math.floor(props.time / 100) % 60
     let min = Math.floor((props.time / 100) / 60)
 
     // Display double digits with 0 at start if time is single digit
-    let msDisplay = ms < 10 ? `0${ms}` : ms
+    let csDisplay = cs < 10 ? `0${cs}` : cs
     let secDisplay = sec < 10 ? `0${sec}` : sec
     let minDisplay = min < 10 ? `0${min}` : min
 
@@ -26,7 +26,7 @@ export default function Scores(props) {
             <div className="scores">
                 {
                     min < 60
-                    ? <h4 className="timer">Time: {minDisplay}:{secDisplay}:{msDisplay}</h4>
+                    ? <h4 className="timer">Time: {minDisplay}:{secDisplay}:{csDisplay}</h4>
                     : <h4 className="timer">Time: &gt;1 hour</h4>
                 }
                 <h4 className="rolls">Rolls: {props.rolls}</h4>

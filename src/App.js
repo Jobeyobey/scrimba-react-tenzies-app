@@ -8,15 +8,16 @@ import Confetti from "react-confetti"
 export default function App() {
 
     const [numDice, setNumDice] = React.useState(10)
-    const [timeChallenge, setTimeChallenge] = React.useState({challenge: false, timer: 0})
+    const [timeChallenge, setTimeChallenge] = React.useState({challenge: false, timer: 2000})
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
+    const [gameFinished, setGameFinished] = React.useState(false)
     const [rolls, setRolls] = React.useState(0)
     const [time, setTime] = React.useState(0)
     const [highScore, setHighScore] = React.useState(
             localStorage.getItem('highScore') 
             ? JSON.parse(localStorage.getItem('highScore'))
-            : {fastestTime: 0, leastRolls: 0}
+            : {fastestTime: 0, leastRolls: 0, wins: 0, losses: 0}
         )
     const [inProgress, setInProgress] = React.useState(false)
     const intervalRef = React.useRef(null)
@@ -28,7 +29,8 @@ export default function App() {
                 setTenzies(true)
                 clearInterval(intervalRef.current)
                 intervalRef.current = null
-                setInProgress(!inProgress)
+                setInProgress(false)
+                setGameFinished(true)
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
                     if(score.fastestTime > time || score.fastestTime === 0) {
@@ -37,11 +39,30 @@ export default function App() {
                     if(score.leastRolls > rolls || score.leastRolls === 0) {
                         score.leastRolls = rolls
                     }
+                    if(timeChallenge.challenge) {
+                        score.wins += 1
+                    }
                     return score
                 })
             }
         }
     }, [dice])
+
+    // If time challenge is on, check for a loss. If time elapsed is greater than timeChallenge.timer, trigger a loss
+    React.useEffect(() => {
+        if(time >= timeChallenge.timer && timeChallenge.challenge && inProgress) {
+            clearInterval(intervalRef.current)
+            intervalRef.current = null
+            setInProgress(false)
+            setGameFinished(true)
+            setHighScore(prevHighScore => {
+                return {
+                    ...prevHighScore,
+                    losses: prevHighScore.losses + 1
+                }
+            })
+        }
+    })
 
     // Save highScore to localStorage on win
     React.useEffect(() => {
@@ -56,10 +77,6 @@ export default function App() {
             }, 10)
         }
     }, [inProgress])
-
-    React.useEffect(() => {
-        setDice(allNewDice)
-    }, [numDice])
 
     // Increment number of dice in game in settings Component (max 20)
     function incrementNumDice() {
@@ -98,6 +115,34 @@ export default function App() {
         }
     }
 
+    // Increment time challenge timer
+    function incrementChallengeTimer() {
+        setTimeChallenge(prevTimeChallenge => {
+            if(timeChallenge.timer >= 6000) {
+                return prevTimeChallenge
+            } else {
+                return {
+                    ...prevTimeChallenge,
+                    timer: prevTimeChallenge.timer + 500
+                }
+            }
+        })
+    }
+
+    // Decrement time challenge timer
+    function decrementChallengeTimer() {
+        setTimeChallenge(prevTimeChallenge => {
+            if(timeChallenge.timer <= 500) {
+                return prevTimeChallenge
+            } else {
+                return {
+                    ...prevTimeChallenge,
+                    timer: prevTimeChallenge.timer - 500
+                }
+            }
+        })
+    }
+
     // Create an array of dice objects with an id, value and isHeld property
     function allNewDice() {
         const diceArray = []
@@ -117,12 +162,11 @@ export default function App() {
     function rollDice() {
         if (!inProgress) {
             setInProgress(!inProgress)
-        }
-        if (tenzies) {
             setDice(allNewDice)
             setTenzies(false)
             setRolls(0)
             setTime(0)
+            setGameFinished(false)
         } else {
             const newDice = allNewDice();
             setDice(oldDice => oldDice.map((die, index) => {
@@ -157,11 +201,16 @@ export default function App() {
 
     return (
         <main>
+
+            {/* Render container for app, if the game is won, display confetti */}
             <div className="main-container">
                 {tenzies && <Confetti />}
+
                 <h1 className="title">Tenzies</h1>
                 <p className="description">Roll until all dice are the same. Click each die to
                     freeze it at its current value between rolls.</p>
+
+                {/* Only display dice when game is in progress */}
                 {inProgress &&
                 <div className="dice-holder">
                     {allDice}
@@ -175,13 +224,25 @@ export default function App() {
                     {inProgress ? "Roll Dice" : "Start New Game"}
                 </button>
             </div>
-            <Scores rolls={rolls} time={time} highScore={highScore}/>
+            <Scores
+                rolls={rolls}
+                time={time}
+                highScore={highScore}
+                timeChallenge={timeChallenge}
+                inProgress={inProgress}
+                gameFinished={gameFinished}
+                setHighScore={setHighScore}
+            />
+
+            {/* Only display settings when game is not in progress */}
             { !inProgress&& <Settings
                     incrementNumDice={incrementNumDice}
                     decrementNumDice={decrementNumDice}
                     numDice={numDice}
                     timeChallenge={timeChallenge}
                     toggleChallenge={toggleChallenge}
+                    incrementChallengeTimer={incrementChallengeTimer}
+                    decrementChallengeTimer={decrementChallengeTimer}
                 />
             }
         </main>
@@ -196,7 +257,7 @@ export default function App() {
  * Track high scores (locally) DONE
  * When game is stopped, have settings appear DONE
  * Add/Remove dice DONE
- * Set timer with possibility to lose
+ * Set timer with possibility to lose DONE
  * Clear high scores button
  * Update/Display high scores corresponding with numDice
 */
@@ -206,4 +267,5 @@ export default function App() {
  *  Before game is started, making it possible to set a countdown timer
  *  If countdown timer reaches 0, the game is lost
  *      This can contribute to a win/loss tracker if I wanted
+ * **** Use timer to take away current time from time challenge time. When time challenge time hits 0, game over
  */

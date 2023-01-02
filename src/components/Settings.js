@@ -2,8 +2,10 @@ import React from "react"
 
 export default function settings(props) {
 
+
     const challengeOn = props.timeChallenge.challenge
 
+    // Converting centiseconds, seconds and minutes for time challenge display
     let cs = props.timeChallenge.timer % 100
     let sec = Math.floor(props.timeChallenge.timer / 100) % 60
     let min = Math.floor((props.timeChallenge.timer / 100) / 60)
@@ -17,6 +19,8 @@ export default function settings(props) {
             <h2 className="settings-title">Game Settings</h2>
             <div className="settings">
                 <div className="settings-setting">
+
+                    {/* Time challenge on/off buttons */}
                     <h4>Time Challenge:</h4>
                     <div>
                         <button
@@ -33,6 +37,8 @@ export default function settings(props) {
                             </button>
                     </div>
                 </div>
+
+                {/* If time challenge is set to on, display the timer and buttons */}
                 {props.timeChallenge.challenge &&
                     <div className="settings-setting">
                     <h4 className="settings-challenge-timer">Timer: {minDisplay}:{secDisplay}:{csDisplay}</h4>
@@ -52,6 +58,8 @@ export default function settings(props) {
                         </div>
                 </div>
                 }
+
+                {/* Number of dice text & buttons */}
                 <div className="settings-setting">
                     <h4>Dice Number: {props.numDice}</h4>
                     <div>

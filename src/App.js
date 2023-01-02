@@ -29,6 +29,7 @@ export default function App() {
                 clearInterval(intervalRef.current)
                 intervalRef.current = null
                 setInProgress(!inProgress)
+                // Increase wins
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
                     if(score.fastestTime > time || score.fastestTime === 0) {
@@ -43,6 +44,16 @@ export default function App() {
         }
     }, [dice])
 
+    // If time challenge is on, check for a loss. If time elapsed is greater than timeChallenge.timer, trigger a loss
+    React.useEffect(() => {
+        if(time >= timeChallenge.timer && timeChallenge.challenge) {
+            clearInterval(intervalRef.current)
+            intervalRef.current = null
+            setInProgress(false)
+            // Increase losses
+        }
+    })
+
     // Save highScore to localStorage on win
     React.useEffect(() => {
         localStorage.setItem('highScore', JSON.stringify(highScore))
@@ -56,10 +67,6 @@ export default function App() {
             }, 10)
         }
     }, [inProgress])
-
-    React.useEffect(() => {
-        setDice(allNewDice)
-    }, [numDice])
 
     // Increment number of dice in game in settings Component (max 20)
     function incrementNumDice() {
@@ -145,8 +152,6 @@ export default function App() {
     function rollDice() {
         if (!inProgress) {
             setInProgress(!inProgress)
-        }
-        if (tenzies) {
             setDice(allNewDice)
             setTenzies(false)
             setRolls(0)
@@ -185,11 +190,16 @@ export default function App() {
 
     return (
         <main>
+
+            {/* Render container for app, if the game is won, display confetti */}
             <div className="main-container">
                 {tenzies && <Confetti />}
+
                 <h1 className="title">Tenzies</h1>
                 <p className="description">Roll until all dice are the same. Click each die to
                     freeze it at its current value between rolls.</p>
+
+                {/* Only display dice when game is in progress */}
                 {inProgress &&
                 <div className="dice-holder">
                     {allDice}
@@ -203,7 +213,15 @@ export default function App() {
                     {inProgress ? "Roll Dice" : "Start New Game"}
                 </button>
             </div>
-            <Scores rolls={rolls} time={time} highScore={highScore}/>
+            <Scores
+                rolls={rolls}
+                time={time}
+                highScore={highScore}
+                timeChallenge={timeChallenge}
+                inProgress={inProgress}
+            />
+
+            {/* Only display settings when game is not in progress */}
             { !inProgress&& <Settings
                     incrementNumDice={incrementNumDice}
                     decrementNumDice={decrementNumDice}

@@ -1,6 +1,7 @@
 import React from "react"
 
 export default function Scores(props) {
+    const [finalTime, setFinalTime] = React.useState(null)
 
     // Get centiseconds, seconds and minutes from props.time
     let cs = props.time % 100
@@ -43,11 +44,15 @@ export default function Scores(props) {
         timer = <h4 className="timer">Time: {challengeDisplayMin}:{challengeDisplaySec}:{challengeDisplayCs}</h4>
     }
 
+    React.useEffect(() => {
+        setFinalTime(timer)
+    }, [props.gameFinished])
+
     return (
         <div className="score-container">
             <h2 className="score-title">Current Game</h2>
             <div className="scores">
-                {timer}
+                {props.gameFinished ? finalTime : timer}
                 <h4 className="rolls">Rolls: {props.rolls}</h4>
             </div>
             <br />

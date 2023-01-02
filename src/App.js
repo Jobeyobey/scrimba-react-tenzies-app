@@ -11,6 +11,7 @@ export default function App() {
     const [timeChallenge, setTimeChallenge] = React.useState({challenge: false, timer: 2000})
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
+    const [gameFinished, setGameFinished] = React.useState(false)
     const [rolls, setRolls] = React.useState(0)
     const [time, setTime] = React.useState(0)
     const [highScore, setHighScore] = React.useState(
@@ -28,7 +29,8 @@ export default function App() {
                 setTenzies(true)
                 clearInterval(intervalRef.current)
                 intervalRef.current = null
-                setInProgress(!inProgress)
+                setInProgress(false)
+                setGameFinished(true)
                 // Increase wins
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
@@ -50,6 +52,7 @@ export default function App() {
             clearInterval(intervalRef.current)
             intervalRef.current = null
             setInProgress(false)
+            setGameFinished(true)
             // Increase losses
         }
     })
@@ -156,6 +159,7 @@ export default function App() {
             setTenzies(false)
             setRolls(0)
             setTime(0)
+            setGameFinished(false)
         } else {
             const newDice = allNewDice();
             setDice(oldDice => oldDice.map((die, index) => {
@@ -219,6 +223,7 @@ export default function App() {
                 highScore={highScore}
                 timeChallenge={timeChallenge}
                 inProgress={inProgress}
+                gameFinished={gameFinished}
             />
 
             {/* Only display settings when game is not in progress */}

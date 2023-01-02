@@ -49,6 +49,10 @@ export default function Scores(props) {
         setFinalTime(timer)
     }, [props.gameFinished])
 
+    function resetScore() {
+        props.setHighScore({fastestTime: 0, leastRolls: 0, wins: 0, losses: 0})
+    }
+
     return (
         <div className="score-container">
             <h2 className="score-title">Current Game</h2>
@@ -68,6 +72,7 @@ export default function Scores(props) {
                 <h4 className="wins">Wins: {props.highScore.wins}</h4>
                 <h4 className="losses">Losses: {props.highScore.losses}</h4>
             </div>
+            <button className="scores-reset" onClick={resetScore}>Reset Scores</button>
         </div>
     )
 }

@@ -231,6 +231,7 @@ export default function App() {
                 timeChallenge={timeChallenge}
                 inProgress={inProgress}
                 gameFinished={gameFinished}
+                setHighScore={setHighScore}
             />
 
             {/* Only display settings when game is not in progress */}

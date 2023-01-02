@@ -44,6 +44,7 @@ export default function Scores(props) {
         timer = <h4 className="timer">Time: {challengeDisplayMin}:{challengeDisplaySec}:{challengeDisplayCs}</h4>
     }
 
+    // When game is finished (win or loss), update finalTime to equal the above `time` value. Keep this displayed until game is reset.
     React.useEffect(() => {
         setFinalTime(timer)
     }, [props.gameFinished])
@@ -64,8 +65,8 @@ export default function Scores(props) {
             <br />
             <h2 className="score-title">Timed Score</h2>
             <div className="scores">
-                <h4 className="wins">Wins: 0</h4>
-                <h4 className="losses">Losses: 0</h4>
+                <h4 className="wins">Wins: {props.highScore.wins}</h4>
+                <h4 className="losses">Losses: {props.highScore.losses}</h4>
             </div>
         </div>
     )

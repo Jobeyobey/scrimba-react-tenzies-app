@@ -17,7 +17,7 @@ export default function App() {
     const [highScore, setHighScore] = React.useState(
             localStorage.getItem('highScore') 
             ? JSON.parse(localStorage.getItem('highScore'))
-            : {fastestTime: 0, leastRolls: 0}
+            : {fastestTime: 0, leastRolls: 0, wins: 0, losses: 0}
         )
     const [inProgress, setInProgress] = React.useState(false)
     const intervalRef = React.useRef(null)
@@ -31,7 +31,6 @@ export default function App() {
                 intervalRef.current = null
                 setInProgress(false)
                 setGameFinished(true)
-                // Increase wins
                 setHighScore(prevHighScore => {
                     let score = {...prevHighScore}
                     if(score.fastestTime > time || score.fastestTime === 0) {
@@ -39,6 +38,9 @@ export default function App() {
                     }
                     if(score.leastRolls > rolls || score.leastRolls === 0) {
                         score.leastRolls = rolls
+                    }
+                    if(timeChallenge.challenge) {
+                        score.wins += 1
                     }
                     return score
                 })
@@ -48,12 +50,17 @@ export default function App() {
 
     // If time challenge is on, check for a loss. If time elapsed is greater than timeChallenge.timer, trigger a loss
     React.useEffect(() => {
-        if(time >= timeChallenge.timer && timeChallenge.challenge) {
+        if(time >= timeChallenge.timer && timeChallenge.challenge && inProgress) {
             clearInterval(intervalRef.current)
             intervalRef.current = null
             setInProgress(false)
             setGameFinished(true)
-            // Increase losses
+            setHighScore(prevHighScore => {
+                return {
+                    ...prevHighScore,
+                    losses: prevHighScore.losses + 1
+                }
+            })
         }
     })
 
@@ -249,7 +256,7 @@ export default function App() {
  * Track high scores (locally) DONE
  * When game is stopped, have settings appear DONE
  * Add/Remove dice DONE
- * Set timer with possibility to lose
+ * Set timer with possibility to lose DONE
  * Clear high scores button
  * Update/Display high scores corresponding with numDice
 */

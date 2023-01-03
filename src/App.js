@@ -258,14 +258,16 @@ export default function App() {
  * When game is stopped, have settings appear DONE
  * Add/Remove dice DONE
  * Set timer with possibility to lose DONE
- * Clear high scores button
+ * Clear high scores button DONE
  * Update/Display high scores corresponding with numDice
 */
 
 /**
- * Timer with possibility to lose
- *  Before game is started, making it possible to set a countdown timer
- *  If countdown timer reaches 0, the game is lost
- *      This can contribute to a win/loss tracker if I wanted
- * **** Use timer to take away current time from time challenge time. When time challenge time hits 0, game over
+ * Display high scores with corresponding dice
+ *  Create an array containing an object for each high score/dice
+ *  Each object should have an ID corresponding to number of dice, fastest time and least rolls
+ *  High score title should display High Score: X Dice.
+ *      Access highScore array by iterating through, .findIndex(object => object.id === ${dice}) to find the corresponding ID
+ *      Use corresponding ID index to save into a variable for easy access
+ *      Use this to display the relevant scores etc.
  */

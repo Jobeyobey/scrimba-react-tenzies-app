@@ -14,10 +14,15 @@ export default function App() {
     const [gameFinished, setGameFinished] = React.useState(false)
     const [rolls, setRolls] = React.useState(0)
     const [time, setTime] = React.useState(0)
+    // const [highScore, setHighScore] = React.useState(
+    //         localStorage.getItem('highScore') 
+    //         ? JSON.parse(localStorage.getItem('highScore'))
+    //         : {fastestTime: 0, leastRolls: 0, wins: 0, losses: 0}
+    //     )
     const [highScore, setHighScore] = React.useState(
             localStorage.getItem('highScore') 
             ? JSON.parse(localStorage.getItem('highScore'))
-            : {fastestTime: 0, leastRolls: 0, wins: 0, losses: 0}
+            : []
         )
     const [inProgress, setInProgress] = React.useState(false)
     const intervalRef = React.useRef(null)
@@ -26,23 +31,38 @@ export default function App() {
     React.useEffect(() => {
         if(dice.every(die => die.isHeld)) {
             if(dice.every(die => die.value === dice[0].value)) {
+                console.log("Game won!")
                 setTenzies(true)
                 clearInterval(intervalRef.current)
                 intervalRef.current = null
                 setInProgress(false)
                 setGameFinished(true)
                 setHighScore(prevHighScore => {
-                    let score = {...prevHighScore}
-                    if(score.fastestTime > time || score.fastestTime === 0) {
-                        score.fastestTime = time
+                    let newHighScore = [...prevHighScore]
+                    let scoreIndex = newHighScore.findIndex(item => item.id === numDice)
+                    if(scoreIndex !== -1) {
+                        let newScore = {...newHighScore[scoreIndex]}
+                        if(newScore.fastestTime > time || newScore.fastestTime === "None") {
+                            newScore.fastestTime = time
+                        }
+                        if(newScore.leastRolls > rolls || newScore.leastRolls === "None") {
+                            newScore.leastRolls = rolls
+                        }
+                        if(timeChallenge.challenge) {
+                            newScore.wins += 1
+                        }
+                        newHighScore.splice(scoreIndex, 1, newScore)
+                    } else {
+                        let newScore = {
+                            id: numDice,
+                            fastestTime: time,
+                            leastRolls: rolls,
+                            wins: timeChallenge.challenge ? 1 : 0,
+                            losses: 0
+                        }
+                        newHighScore.push(newScore)
                     }
-                    if(score.leastRolls > rolls || score.leastRolls === 0) {
-                        score.leastRolls = rolls
-                    }
-                    if(timeChallenge.challenge) {
-                        score.wins += 1
-                    }
-                    return score
+                    return newHighScore
                 })
             }
         }
@@ -56,10 +76,23 @@ export default function App() {
             setInProgress(false)
             setGameFinished(true)
             setHighScore(prevHighScore => {
-                return {
-                    ...prevHighScore,
-                    losses: prevHighScore.losses + 1
-                }
+                let newHighScore = [...prevHighScore]
+                    let scoreIndex = newHighScore.findIndex(item => item.id === numDice)
+                    if(scoreIndex !== -1) {
+                        let newScore = {...newHighScore[scoreIndex]}
+                        newScore.losses += 1
+                        newHighScore.splice(scoreIndex, 1, newScore)
+                    } else {
+                        let newScore = {
+                            id: numDice,
+                            fastestTime: "None",
+                            leastRolls: "None",
+                            wins: 0,
+                            losses: timeChallenge.challenge ? 1 : 0
+                        }
+                        newHighScore.push(newScore)
+                    }
+                    return newHighScore
             })
         }
     })

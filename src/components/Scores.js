@@ -23,7 +23,7 @@ export default function Scores(props) {
 
     // Clear high score from local storage
     function resetScore() {
-        props.setHighScore({fastestTime: 0, leastRolls: 0, wins: 0, losses: 0})
+        props.setHighScore([])
     }
     
     // Creates current game element. If time challenge is on, display countdown timer. If off, display stopwatch timer. If clock goes over 60m, display "">1 hour"

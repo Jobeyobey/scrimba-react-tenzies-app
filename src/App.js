@@ -17,12 +17,12 @@ export default function App() {
     const [highScore, setHighScore] = React.useState(
             localStorage.getItem('highScore') 
             ? JSON.parse(localStorage.getItem('highScore'))
-            : {fastestTime: 0, leastRolls: 0, wins: 0, losses: 0}
+            : []
         )
     const [inProgress, setInProgress] = React.useState(false)
     const intervalRef = React.useRef(null)
     
-    // Check for a win whenever "dice" state updates. Stop timer on win. Set high scores on win.
+    // Check for a win whenever "dice" state updates. Stop timer on win. Set inProgress to false. Set gameFinsihed to true. Set high scores on win.
     React.useEffect(() => {
         if(dice.every(die => die.isHeld)) {
             if(dice.every(die => die.value === dice[0].value)) {
@@ -32,23 +32,37 @@ export default function App() {
                 setInProgress(false)
                 setGameFinished(true)
                 setHighScore(prevHighScore => {
-                    let score = {...prevHighScore}
-                    if(score.fastestTime > time || score.fastestTime === 0) {
-                        score.fastestTime = time
+                    let newHighScore = [...prevHighScore]
+                    let scoreIndex = newHighScore.findIndex(item => item.id === numDice)
+                    if(scoreIndex !== -1) {
+                        let newScore = {...newHighScore[scoreIndex]}
+                        if(newScore.fastestTime > time || newScore.fastestTime === "None") {
+                            newScore.fastestTime = time
+                        }
+                        if(newScore.leastRolls > rolls || newScore.leastRolls === "None") {
+                            newScore.leastRolls = rolls
+                        }
+                        if(timeChallenge.challenge) {
+                            newScore.wins += 1
+                        }
+                        newHighScore.splice(scoreIndex, 1, newScore)
+                    } else {
+                        let newScore = {
+                            id: numDice,
+                            fastestTime: time,
+                            leastRolls: rolls,
+                            wins: timeChallenge.challenge ? 1 : 0,
+                            losses: 0
+                        }
+                        newHighScore.push(newScore)
                     }
-                    if(score.leastRolls > rolls || score.leastRolls === 0) {
-                        score.leastRolls = rolls
-                    }
-                    if(timeChallenge.challenge) {
-                        score.wins += 1
-                    }
-                    return score
+                    return newHighScore
                 })
             }
         }
     }, [dice])
 
-    // If time challenge is on, check for a loss. If time elapsed is greater than timeChallenge.timer, trigger a loss
+    // If time challenge is on, check for a loss. If time elapsed is greater than timeChallenge.timer, trigger a loss.
     React.useEffect(() => {
         if(time >= timeChallenge.timer && timeChallenge.challenge && inProgress) {
             clearInterval(intervalRef.current)
@@ -56,10 +70,23 @@ export default function App() {
             setInProgress(false)
             setGameFinished(true)
             setHighScore(prevHighScore => {
-                return {
-                    ...prevHighScore,
-                    losses: prevHighScore.losses + 1
-                }
+                let newHighScore = [...prevHighScore]
+                    let scoreIndex = newHighScore.findIndex(item => item.id === numDice)
+                    if(scoreIndex !== -1) {
+                        let newScore = {...newHighScore[scoreIndex]}
+                        newScore.losses += 1
+                        newHighScore.splice(scoreIndex, 1, newScore)
+                    } else {
+                        let newScore = {
+                            id: numDice,
+                            fastestTime: "None",
+                            leastRolls: "None",
+                            wins: 0,
+                            losses: timeChallenge.challenge ? 1 : 0
+                        }
+                        newHighScore.push(newScore)
+                    }
+                    return newHighScore
             })
         }
     })
@@ -158,7 +185,7 @@ export default function App() {
         return diceArray
     }
 
-    // 'roll' dice and update state with new dice. Keep 'isHeld' dice. If game is won, reset game
+    // 'roll' dice and update state with new dice. Keep 'isHeld' dice. If game is not inProgress, start a new game.
     function rollDice() {
         if (!inProgress) {
             setInProgress(!inProgress)
@@ -232,6 +259,7 @@ export default function App() {
                 inProgress={inProgress}
                 gameFinished={gameFinished}
                 setHighScore={setHighScore}
+                numDice={numDice}
             />
 
             {/* Only display settings when game is not in progress */}
@@ -248,26 +276,3 @@ export default function App() {
         </main>
     )
 }
-
-/** 
- * Extra Credit Ideas:
- * Real dots on dice (CSS) DONE
- * Track number of rolls DONE
- * Track time taken to win DONE
- * Track high scores (locally) DONE
- * When game is stopped, have settings appear DONE
- * Add/Remove dice DONE
- * Set timer with possibility to lose DONE
- * Clear high scores button DONE
- * Update/Display high scores corresponding with numDice
-*/
-
-/**
- * Display high scores with corresponding dice
- *  Create an array containing an object for each high score/dice
- *  Each object should have an ID corresponding to number of dice, fastest time and least rolls
- *  High score title should display High Score: X Dice.
- *      Access highScore array by iterating through, .findIndex(object => object.id === ${dice}) to find the corresponding ID
- *      Use corresponding ID index to save into a variable for easy access
- *      Use this to display the relevant scores etc.
- */

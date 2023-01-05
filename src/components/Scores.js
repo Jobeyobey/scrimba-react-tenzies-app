@@ -17,11 +17,50 @@ export default function Scores(props) {
         return <h4 className="timer">Time: {minDisplay}:{secDisplay}:{csDisplay}</h4>
     }
 
-    function displayRolls(rolls) {
-        return <h4 className="rolls">Rolls: {rolls}</h4>
+
+
+    // Find index of object with ID corresponding with number of dice. If it doesn't exist, display N/A. If it does, display fastest time
+    let fastestTimeDisplay = null
+
+    function displayFastestTime() {
+        let scoreIndex = props.highScore.findIndex(item => item.id === props.numDice)
+        if(props.highScore[scoreIndex] === undefined) {
+            return fastestTimeDisplay = <h4 className="timer">Time: N/A</h4>
+        } else if(props.highScore[scoreIndex].fastestTime === "None") {
+            return fastestTimeDisplay = <h4 className="timer">Time: N/A</h4>
+        } else {
+            return displayTime(props.highScore[scoreIndex].fastestTime)
+        }
     }
 
-    // Clear high score from local storage
+        // Find index of object with ID corresponding with number of dice. If it doesn't exist, display N/A. If it does, display least rolls
+        function displayRolls() {
+            let scoreIndex = props.highScore.findIndex(item => item.id === props.numDice)
+            if(props.highScore[scoreIndex] === undefined) {
+                return <h4 className="rolls">Rolls: N/A</h4>
+            }
+            return <h4 className="rolls">Rolls: {props.highScore[scoreIndex].leastRolls}</h4>
+        }
+
+        // Find index of object with ID corresponding with number of dice. If it doesn't exist, display 0. If it does, display number of wins
+        function displayTimedWins() {
+            let scoreIndex = props.highScore.findIndex(item => item.id === props.numDice)
+            if(props.highScore[scoreIndex] === undefined) {
+                return <h4 className="wins">Wins: 0</h4>
+            }
+            return <h4 className="wins">Wins: {props.highScore[scoreIndex].wins}</h4>
+        }
+
+        // Find index of object with ID corresponding with number of dice. If it doesn't exist, display 0. If it does, display number of losses
+        function displayTimedLosses() {
+            let scoreIndex = props.highScore.findIndex(item => item.id === props.numDice)
+            if(props.highScore[scoreIndex] === undefined) {
+                return <h4 className="losses">Losses: 0</h4>
+            }
+            return <h4 className="losses">Losses: {props.highScore[scoreIndex].losses}</h4>
+        }
+        
+    // Clear high scores from local storage
     function resetScore() {
         props.setHighScore([])
     }
@@ -53,16 +92,16 @@ export default function Scores(props) {
                 <h4 className="rolls">Rolls: {props.rolls}</h4>
             </div>
             <br />
-            <h2 className="score-title">High Scores</h2>
+            <h2 className="score-title">High Scores: {props.numDice} Dice</h2>
             <div className="scores">
-                {displayTime(props.highScore.fastestTime)}
-                {displayRolls(props.highScore.leastRolls)}
+                {displayFastestTime()}
+                {displayRolls()}
             </div>
             <br />
             <h2 className="score-title">Timed Score</h2>
             <div className="scores">
-                <h4 className="wins">Wins: {props.highScore.wins}</h4>
-                <h4 className="losses">Losses: {props.highScore.losses}</h4>
+                {displayTimedWins()}
+                {displayTimedLosses()}
             </div>
             <button className="scores-reset" onClick={resetScore}>Reset Scores</button>
         </div>
